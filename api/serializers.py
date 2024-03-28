@@ -1,10 +1,11 @@
 from geopy_calc import distance_calc
 from models import car, cargo, engine, location
-from sqlalchemy import select, join
+from sqlalchemy import join, select
+
 
 class LocationTable:
     """Класс для работы с таблицей локаций"""
-    
+
     def __init__(self, conn):
         self.conn = conn
 
@@ -44,9 +45,10 @@ class LocationTable:
 
         return res
 
+
 class CargoTable:
     """Класс для работы с таблицей грузов"""
-    
+
     def __init__(self, conn):
         self.conn = conn
 
@@ -54,17 +56,21 @@ class CargoTable:
         """Метод добавления груза"""
 
         data = data.dict()
-        
-        pickup_loc_q = location.select().where(location.c.zip == data["pickup_location"])
-        
+
+        pickup_loc_q = location.select().where(
+            location.c.zip == data["pickup_location"]
+        )
+
         if len(self.conn.execute(pickup_loc_q).fetchall()) == 0:
             return {"Error": "No such location in the database"}
-        
-        delivery_loc_q = location.select().where(location.c.zip == data["delivery_location"])
-        
+
+        delivery_loc_q = location.select().where(
+            location.c.zip == data["delivery_location"]
+        )
+
         if len(self.conn.execute(delivery_loc_q).fetchall()) == 0:
             return {"Error": "No such location in the database"}
-        
+
         ins = cargo.insert().values(
             weight=data["weight"],
             pickup_location=data["pickup_location"],
@@ -180,13 +186,14 @@ class CargoTable:
 
     def delete(self, id):
         s = cargo.delete().where(cargo.c.id == id)
-        
+
         self.conn.execute(s)
         self.conn.commit()
 
+
 class CarTable:
     """Класс для работы с таблицей машин"""
-    
+
     def __init__(self, conn):
         self.conn = conn
 
@@ -194,9 +201,9 @@ class CarTable:
         """Метод добавления новой машины"""
 
         data = data.dict()
-        
+
         curr_loc_q = location.select().where(location.c.zip == data["current_location"])
-        
+
         if len(self.conn.execute(curr_loc_q).fetchall()) == 0:
             return {"Error": "No such location in the database"}
 
@@ -231,9 +238,9 @@ class CarTable:
         return res
 
     def update(self, id, data):
-        """Метод изменения информации о машине"""
+        """Метод изменения информации о грузе"""
 
-        update_query = cargo.update().where(car.c.id == id)
+        update_query = car.update().where(car.c.id == id)
 
         for key, value in data.items():
             self.conn.execute(update_query.values(**{key: value}))

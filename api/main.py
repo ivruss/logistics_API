@@ -8,18 +8,26 @@ from setup import setup
 
 app = FastAPI()
 
-def check_initialization_flag():
-    flag_file = "initialized.flag"
-    if os.path.exists(flag_file):
-        print("База данных уже заполнена. Заполнение не требуется")
-        return 0
+# def check_initialization_flag():
+#     flag_file = "initialized.flag"
+#     if os.path.exists(flag_file):
+#         print("База данных уже заполнена. Заполнение не требуется")
+#         return 0
     
-    else:
-        print("Необходимо первичное заполнение БД. Пожалуйста, подождите")
-        setup()
-        return 0
+#     else:
+#         print("Необходимо первичное заполнение БД. Пожалуйста, подождите")
+#         setup()
+#         return 0
     
-check_initialization_flag()
+# check_initialization_flag()
+
+@app.get("/cars")
+def get_cars():
+    with engine.connect() as conn:
+        table = CarTable(conn)
+        data = table.get()
+    
+    return data
 
 @app.get("/locations")
 def get_locs():
@@ -68,7 +76,7 @@ def patch_cargo(cargo_id, payload: dict):
 @app.patch("/cars/{car_id}")
 def patch_cargo(car_id, payload: dict):
     with engine.connect() as conn:
-        table = CargoTable(conn)
+        table = CarTable(conn)
         ans = table.update(car_id, payload)
         
     return 200
