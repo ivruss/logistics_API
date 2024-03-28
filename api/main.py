@@ -8,18 +8,18 @@ from setup import setup
 
 app = FastAPI()
 
-# def check_initialization_flag():
-#     flag_file = "initialized.flag"
-#     if os.path.exists(flag_file):
-#         print("База данных уже заполнена. Заполнение не требуется")
-#         return 0
+def check_initialization_flag():
+    flag_file = "initialized.flag"
+    if os.path.exists(flag_file):
+        print("База данных уже заполнена. Заполнение не требуется")
+        return 0
     
-#     else:
-#         print("Необходимо первичное заполнение БД. Пожалуйста, подождите")
-#         setup()
-#         return 0
+    else:
+        print("Необходимо первичное заполнение БД. Пожалуйста, подождите")
+        setup()
+        return 0
     
-# check_initialization_flag()
+check_initialization_flag()
 
 @app.get("/locations")
 def get_locs():
