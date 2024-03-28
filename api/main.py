@@ -65,6 +65,14 @@ def patch_cargo(cargo_id, payload: dict):
         
     return 200
 
+@app.patch("/cars/{car_id}")
+def patch_cargo(car_id, payload: dict):
+    with engine.connect() as conn:
+        table = CargoTable(conn)
+        ans = table.update(car_id, payload)
+        
+    return 200
+
 @app.delete("/cargos/{cargo_id}")
 def delete_cargo(cargo_id):
     with engine.connect() as conn:

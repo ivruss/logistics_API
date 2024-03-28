@@ -229,3 +229,13 @@ class CarTable:
             res.append(dict(zip(keys, item)))
 
         return res
+
+    def update(self, id, data):
+        """Метод изменения информации о машине"""
+
+        update_query = cargo.update().where(car.c.id == id)
+
+        for key, value in data.items():
+            self.conn.execute(update_query.values(**{key: value}))
+
+        self.conn.commit()
