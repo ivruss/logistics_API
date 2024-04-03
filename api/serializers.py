@@ -126,6 +126,8 @@ class CargoTable:
         return res
 
     def get_all(self):
+        """Метод получения всех грузов"""
+        
         join_condition = cargo.c.pickup_location == location.c.zip
         join_query = join(cargo, location, join_condition)
         cargo_q = select(cargo, location).select_from(join_query)
@@ -185,6 +187,8 @@ class CargoTable:
         self.conn.commit()
 
     def delete(self, id):
+        """Метод изменения удаления груза"""
+        
         s = cargo.delete().where(cargo.c.id == id)
 
         self.conn.execute(s)
@@ -238,7 +242,7 @@ class CarTable:
         return res
 
     def update(self, id, data):
-        """Метод изменения информации о грузе"""
+        """Метод изменения информации о машине"""
 
         update_query = car.update().where(car.c.id == id)
 
